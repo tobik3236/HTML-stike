@@ -110,7 +110,7 @@ const sun=new THREE.DirectionalLight(0xfff1d6,1.4);sun.position.set(110,80,95);s
 sun.castShadow=true;sun.shadow.mapSize.set(touch?1024:2048,touch?1024:2048);Object.assign(sun.shadow.camera,{left:-95,right:95,top:95,bottom:-95,near:1,far:220});sun.shadow.camera.updateProjectionMatrix();sun.shadow.bias=-.0006;
 const exl=new THREE.PointLight(0xffa040,0,25);scene.add(exl);
 const skyC=document.createElement('canvas');skyC.width=4;skyC.height=256;{const x=skyC.getContext('2d'),g=x.createLinearGradient(0,0,0,256);g.addColorStop(0,'#2f6fb8');g.addColorStop(.45,'#8fbbe6');g.addColorStop(.5,'#dccfb0');g.addColorStop(1,'#b8a47c');x.fillStyle=g;x.fillRect(0,0,4,256)}
-const sky=new THREE.Mesh(new THREE.SphereGeometry(170,16,12),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(skyC),side:THREE.BackSide,fog:false,depthWrite:false}));sky.renderOrder=-1;scene.add(sky);
+const sky=new THREE.Mesh(new THREE.SphereGeometry(150,16,12),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(skyC),side:THREE.BackSide,fog:false,depthWrite:false}));sky.renderOrder=-1;scene.add(sky);
 // ---- текстуры: fbm-шум + карты нормалей ----
 function fbm(size,oct,base){const h=new Float32Array(size*size);let amp=1,tot=0;
  for(let o=0;o<oct;o++){const f=base<<o,lat=new Float32Array(f*f);for(let i=0;i<f*f;i++)lat[i]=Math.random();
@@ -212,7 +212,7 @@ inst(6,mWall,lists[1]);inst(6,mDoor,lists[3]);inst(2,mCrate,lists[2]);inst(4,mCr
 
 for(const[L,cx,cz,c]of[['A',69.1,103.3,'#ffcc33'],['B',22.0,30.5,'#ff7a33']]){const k=document.createElement('canvas');k.width=k.height=256;const x=k.getContext('2d');x.fillStyle=c+'33';x.fillRect(8,8,240,240);x.strokeStyle=c;x.lineWidth=10;x.strokeRect(8,8,240,240);x.fillStyle=c;x.font='bold 190px sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(L,128,138);const m=new THREE.Mesh(new THREE.PlaneGeometry(14,14),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(k),transparent:true,depthWrite:false}));m.rotation.x=-Math.PI/2;m.position.set(cx,.03,cz);scene.add(m)}
 
-scene.add=_sceneAdd;legacyMap.visible=false;
+scene.add=_sceneAdd;legacyMap.visible=true;
 
 // ---- Dust 2 GLB ----
 const dustMap=new THREE.Group();scene.add(dustMap);
@@ -227,8 +227,8 @@ gltfLoader.load('dust_2_cs_1.6.glb',gltf=>{
   // Исходный GLB уже имеет правильную ориентацию; центрируем его в игровом мире 128x128.
   root.position.set(71.153,4.291,89.035);
   dustMap.add(root);
-  dustMapReady=true;
-},undefined,e=>console.error('Не удалось загрузить dust_2_cs_1.6.glb',e));
+  dustMapReady=true;legacyMap.visible=false;
+},undefined,e=>{legacyMap.visible=true;console.warn('dust_2_cs_1.6.glb не найден — используется встроенная карта',e)});
 // ---- модель бота ----
 function mkBot(tm){const g=new THREE.Group();g.rotation.order='YXZ';
  const S=(c,m,r=.9,me=0)=>new THREE.MeshStandardMaterial({color:c,map:m||null,roughness:r,metalness:me}),
