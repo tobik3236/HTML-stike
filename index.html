@@ -82,15 +82,16 @@ body.edm .h,body.edm #mm,body.edm #gear,body.edm #shb,body.edm .tb,body.edm #fir
 <select id="mapsel" class="op" style="width:min(440px,92vw);margin:0 0 6px" onclick="event.stopPropagation()" onchange="location.search='?map='+this.value"></select>
 <button class="op" id="m5b" style="width:min(440px,92vw);margin:0 0 6px" onclick="event.stopPropagation();setM5()"></button>
 <div class="row" id="tsel"><button class="op" data-tm="t" onclick="event.stopPropagation();setTeam('t')">🟠 Террористы (T)</button><button class="op" data-tm="ct" onclick="event.stopPropagation();setTeam('ct')">🔵 Контр-террористы (КТ)</button></div>
-<p>ПК: <b>клик</b> — захват мыши · WASD · Shift — бег · Пробел — прыжок · ЛКМ — огонь · ПКМ — прицел · R — перезарядка · 1–6 — оружие и гранаты · 7/V — нож · G — бросок · <b>B</b> — круговая закупка (мышь/цифры 1–9, 0 — назад). Телефон: стик, кнопки справа, 🛒 — закупка, ⚙ — настройки.</p><p>Матч — 12 раундов. В начале у вас $800: купите оружие CS2 вашей команды в круговом меню (B / 🛒) за первые 20 секунд раунда. Онлайн-серверы — в ⚙ → Мультиплеер.</p><p><b>Нажмите, чтобы начать</b></p></div>
+<p>ПК: <b>клик</b> — захват мыши · WASD · Shift — бег · Пробел — прыжок · ЛКМ — огонь · ПКМ — прицел · R — перезарядка · 1–6 — оружие и гранаты · 7/V — нож · G — бросок · <b>B</b> — круговая закупка (мышь/цифры 1–9, 0 — назад). Телефон: стик, кнопки справа, 🛒 — закупка, ⚙ — настройки.</p><p>Матч — 12 раундов. В начале у вас $800: купите оружие CS2 вашей команды в круговом меню (B / 🛒) за первые 20 секунд раунда. Онлайн-серверы — в ⚙ → Мультиплеер.</p><p>Спавны: <b>F2</b> — добавить точку T, <b>F3</b> — КТ, <b>F4</b> — дезматч (в том месте, где стоите), F8 — показать метки, F7 — сбросить свои.</p><p><b>Нажмите, чтобы начать</b></p></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/mqtt@5.10.1/dist/mqtt.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 <script src="net.js"></script>
 <script>
-const $=id=>document.getElementById(id),N=64,CS=2,HH=[0,6,2,6,4],V=THREE.Vector3,touch='ontouchstart' in window;
+const $=id=>document.getElementById(id),N=96,CS=2,HH=[0,6,2,6,4],V=THREE.Vector3,touch='ontouchstart' in window;
 if(touch)document.body.classList.add('touch');
 const G=["1111111111111111111111111111111111111111111111111111111111111111", "1111111111111111111111111111111111111111111111111111111111111111", "1111111111111111111111111111111111111111111111111111111111111111", "1111111111111111111111111111111111111111111111111111111111111111", "1111111111111111111111111111111111111111111111111111111111111111", "1111111111111111111111111111111111111111111111111111111111111111", "1111100000000000000011111111111111000000000000000001111111111111", "1111100000000000000000000001111111000000000000000001111111111111", "1111102000000000000000000001111111000000111000000000111111111111", "1111100000000000000000000001111111000001111000000000000000011111", "1111100000000000000111100000000000000001111100000000000000011111", "1100000000000000000000000000000000000001111100000000000000000011", "1100000000000000000000000000000000000001111100000000000000000011", "1100000002002000000000000000000000000001111100000111111000000011", "1100000000000000000100000000000111111111111100001111111100000011", "1100000000000000000000000000000111111111111100001111111110000011", "1100000000000000000000000000000111111111111100001111111111000011", "1100000000044000000000000000000111111111111000001111111110000001", "1111100000000000000011111000200111111111111000001111111110000001", "1111100000000000000011111000000111111111111000001111111110000001", "1111000000000000000011100000000111111111111100001111111110000001", "1111000000000000000111100000000111111111111100000111111110000001", "1111000000000000000111100000000111111111111000000111111110000001", "1111110010000011111111100000000011111111110000000111111110000001", "1111130013200011111111100000000000000000000000000111111110000001", "1111110011000011111111100000000000000000000000000111111110000001", "1111110000000000001111020002000000000000000000000111111110000011", "1111110000000000000111000000000000000000000002000111111110000011", "1111110000000000000111000000000000000000000000000111111110000011", "1111110020110000000111000000000000000000000020000111111110000011", "1111111111111111000011000000200000000000000002000111111110000011", "1111111111111111000021100011100001100000000000000111111110000011", "1111111111111111000000000111100001100000002000000111111110000011", "1111111111111111000000000111100000111111111111111111111110000011", "1111111111111111000000000111100000111111111111111111000000000011", "1111111111111111000000000111100000111111111111111110000000000011", "1111111111111111000020000111120000111111111111111000000000000011", "1111111111111111000111000111100000111111111111111000000000000011", "1111111111111111000111000001000000011111111111111000000000000011", "1111111111111111000111000000000000010111111111111000000000000011", "1111111111111111000111000000000000010110000000000000000000000011", "1111111111111111000111000000000000000000000000000000000000000011", "1111111111111111000001111111100000000020000000000000000001111111", "1111111111111111000001111111100000000000000000000000000001111111", "1111111111111110000011111111100000000000000000000000000001111111", "1111111111100000000011111111000000000000020111111111110000111111", "1111111111100000000011111111000000000000000111111111110000111111", "1111111111100000000011111111000000000000000011111111110000111111", "1111111111100000000011111111000000000000000010000000000000111111", "1111111111100000000011111111100000000000000010000000000000111111", "1111111111111111000001111111100400004000000010000000000000111111", "1111111111111111000000111111100000000000000110010010100001111111", "1111111111111111100000000002000000000000100010000000000000111111", "1111111111111111100000000000000000000400100000000000000000111111", "1111111111111111110000000000000000000000000000000000100000111111", "1111111111111111111100000000200000111111131111111111111111111111", "1111111111111111111111100000200011111111111111111111111111111111", "1111111111111111111111111000001111111111111111111111111111111111", "1111111111111111111111111111111111111111111111111111111111111111", "1111111111111111111111111111111111111111111111111111111111111111", "1111111111111111111111111111111111111111111111111111111111111111", "1111111111111111111111111111111111111111111111111111111111111111", "1111111111111111111111111111111111111111111111111111111111111111", "1111111111111111111111111111111111111111111111111111111111111111"].map(s=>[...s].map(Number));// Mirage (de_mirage), растеризовано по радару
+G.forEach(r=>{while(r.length<N)r.push(1)});while(G.length<N)G.push(Array(N).fill(1));
 const HT=Array.from({length:N+1},()=>new Float32Array(N+1));
 const gh=(x,z)=>{const u=Math.min(N-.001,Math.max(0,x/CS)),v=Math.min(N-.001,Math.max(0,z/CS)),i=u|0,j=v|0,a=u-i,b=v-j;return HT[j][i]*(1-a)*(1-b)+HT[j][i+1]*a*(1-b)+HT[j+1][i]*(1-a)*b+HT[j+1][i+1]*a*b};
 const MAPN='dust2';
@@ -104,10 +105,10 @@ const los=(a,b,c,d)=>{const n=Math.hypot(c-a,d-b)/.5;for(let i=1;i<n;i++){const 
 const ray=(o,d,max)=>{for(let s=.3;s<max;s+=.3){const x=o.x+d.x*s,y=o.y+d.y*s,z=o.z+d.z*s;if(y<gh(x,z))return s;if(y<HH[G[z/CS|0]?.[x/CS|0]??1])return s}return Infinity};
 // ---- рендер, свет, небо ----
 const ren=new THREE.WebGLRenderer({antialias:true});ren.setPixelRatio(Math.min(devicePixelRatio,touch?1.25:1.5));ren.setSize(innerWidth,innerHeight);ren.outputEncoding=THREE.sRGBEncoding;ren.shadowMap.enabled=true;ren.shadowMap.type=THREE.PCFSoftShadowMap;ren.autoClear=false;document.body.prepend(ren.domElement);
-const scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,.3,170);cam.rotation.order='YXZ';
-scene.fog=new THREE.Fog(0xdccfb0,30,125);scene.add(new THREE.HemisphereLight(0xdfeaff,0xb89a6a,.85));
-const sun=new THREE.DirectionalLight(0xfff1d6,1.4);sun.position.set(110,80,95);sun.target.position.set(64,0,64);scene.add(sun,sun.target);
-sun.castShadow=true;sun.shadow.mapSize.set(touch?1024:2048,touch?1024:2048);Object.assign(sun.shadow.camera,{left:-95,right:95,top:95,bottom:-95,near:1,far:220});sun.shadow.camera.updateProjectionMatrix();sun.shadow.bias=-.0006;
+const scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,.3,300);cam.rotation.order='YXZ';
+scene.fog=new THREE.Fog(0xdccfb0,40,175);scene.add(new THREE.HemisphereLight(0xdfeaff,0xb89a6a,.85));
+const sun=new THREE.DirectionalLight(0xfff1d6,1.4);sun.position.set(142,80,127);sun.target.position.set(96,0,96);scene.add(sun,sun.target);
+sun.castShadow=true;sun.shadow.mapSize.set(touch?1024:2048,touch?1024:2048);Object.assign(sun.shadow.camera,{left:-135,right:135,top:135,bottom:-135,near:1,far:320});sun.shadow.camera.updateProjectionMatrix();sun.shadow.bias=-.0006;
 const exl=new THREE.PointLight(0xffa040,0,25);scene.add(exl);
 const skyC=document.createElement('canvas');skyC.width=4;skyC.height=256;{const x=skyC.getContext('2d'),g=x.createLinearGradient(0,0,0,256);g.addColorStop(0,'#2f6fb8');g.addColorStop(.45,'#8fbbe6');g.addColorStop(.5,'#dccfb0');g.addColorStop(1,'#b8a47c');x.fillStyle=g;x.fillRect(0,0,4,256)}
 const sky=new THREE.Mesh(new THREE.SphereGeometry(150,16,12),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(skyC),side:THREE.BackSide,fog:false,depthWrite:false}));sky.renderOrder=-1;scene.add(sky);
@@ -216,43 +217,122 @@ scene.add=_sceneAdd;legacyMap.visible=true;
 // ---- Dust 2 GLB ----
 const dustMap=new THREE.Group();scene.add(dustMap);
 let dustMapReady=false;
+// ===== Dust 2: сетка столкновений, высоты и спавны строятся из самой модели =====
+const SPAWN={custom:{t:[],ct:[],dm:[]},pri:{t:0,ct:0}};let NAV=null;
+const markGrp=new THREE.Group();markGrp.visible=false;scene.add(markGrp);
+const shuf=a=>a.slice().sort(()=>Math.random()-.5);
+function saveSpawns(){try{localStorage.setItem('st2sp_'+MAPN,JSON.stringify(SPAWN.custom))}catch(e){}}
+function applySpawns(){
+  if(!NAV)return;const A=NAV.auto,C=SPAWN.custom;
+  const mix=(cu,au)=>{if(!cu.length)return[au,au.length];const out=cu.map(c=>c.slice());NAV.near(cu[0][0],cu[0][1],10).forEach(c=>{if(out.length<Math.max(10,cu.length)&&!out.some(o=>Math.abs(o[0]-c[0])<2&&Math.abs(o[1]-c[1])<2))out.push(c)});return[out,cu.length]};
+  const[t,pt]=mix(C.t,A.t),[ct,pct]=mix(C.ct,A.ct);
+  TCELL.length=0;TCELL.push(...t);CCELL.length=0;CCELL.push(...ct);SPAWN.pri.t=pt;SPAWN.pri.ct=pct;
+  DMSP.length=0;DMSP.push(...(C.dm.length?C.dm:A.dm));
+  OPEN.length=0;OPEN.push(...NAV.cells);SP.length=0;SP.push(...DMSP);
+  while(markGrp.children.length)markGrp.remove(markGrp.children[0]);
+  const geo=new THREE.CylinderGeometry(.3,.3,2.6,8);
+  [[TCELL.slice(0,Math.max(5,pt)),0xff9f1c],[CCELL.slice(0,Math.max(5,pct)),0x4aa3ff],[DMSP,0x55ff55]].forEach(([L,col])=>{
+    const mt=new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:.65});
+    L.forEach(([x,z])=>{const m=new THREE.Mesh(geo,mt),wx=(x+.5)*CS,wz=(z+.5)*CS;m.position.set(wx,gh(wx,wz)+1.3,wz);markGrp.add(m)})})}
+function setupDust2(root){
+  const WS=N*CS,qs=new URLSearchParams(location.search),ms=parseFloat(qs.get('ms'))||1,man=parseFloat(qs.get('my'))||0;
+  root.updateMatrixWorld(true);
+  const meshes=[];root.traverse(o=>{if(o.isMesh&&o.geometry&&o.geometry.attributes&&o.geometry.attributes.position&&o.visible!==false)meshes.push(o)});
+  if(!meshes.length)throw new Error('в модели нет мешей');
+  // мировые вершины каждого меша
+  let tot=0;const cache=meshes.map(m=>{const p=m.geometry.attributes.position,e=m.matrixWorld.elements,n=p.count,a=new Float32Array(n*3);
+    for(let i=0;i<n;i++){const x=p.getX(i),y=p.getY(i),z=p.getZ(i);a[3*i]=e[0]*x+e[4]*y+e[8]*z+e[12];a[3*i+1]=e[1]*x+e[5]*y+e[9]*z+e[13];a[3*i+2]=e[2]*x+e[6]*y+e[10]*z+e[14]}
+    tot+=n;return a});
+  // габариты по перцентилям (выбросы вроде скайбокса не ломают масштаб)
+  const xs=new Float32Array(tot),zs=new Float32Array(tot);let k=0;
+  cache.forEach(a=>{for(let i=0;i<a.length;i+=3){xs[k]=a[i];zs[k]=a[i+2];k++}});xs.sort();zs.sort();
+  const lo=Math.floor(tot*.0002),hi=Math.max(lo,tot-1-Math.floor(tot*.0002)),x0=xs[lo],x1=xs[hi],z0=zs[lo],z1=zs[hi];
+  const sc=(WS-10)/Math.max(x1-x0,z1-z0,1e-6)*ms,px=WS/2-(x0+x1)/2*sc,pz=WS/2-(z0+z1)/2*sc;
+  root.scale.setScalar(sc);root.position.set(px,0,pz);root.updateMatrixWorld(true);
+  // растеризация треугольников в сетку: FL — высоты горизонтальных поверхностей, WL — вертикальные интервалы стен
+  const FL=new Array(N*N),WL=new Array(N*N),SMP=[[.5,.5],[.25,.25],[.75,.25],[.25,.75],[.75,.75]];
+  const clip=(P,ax,v,ge)=>{const o=[];for(let q=0;q<P.length;q++){const A=P[q],B=P[(q+1)%P.length],da=ge?A[ax]-v:v-A[ax],db=ge?B[ax]-v:v-B[ax];if(da>=0)o.push(A);if((da>=0)!==(db>=0)){const t=da/(da-db);o.push([A[0]+(B[0]-A[0])*t,A[1]+(B[1]-A[1])*t,A[2]+(B[2]-A[2])*t])}}return o};
+  const tri=(ax,ay,az,bx,by,bz,cx,cy,cz)=>{
+    const ux=bx-ax,uy=by-ay,uz=bz-az,vx=cx-ax,vy=cy-ay,vz=cz-az,nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz=ux*vy-uy*vx,ln=Math.hypot(nx,ny,nz);if(ln<1e-12)return;
+    const mnx=Math.min(ax,bx,cx),mxx=Math.max(ax,bx,cx),mnz=Math.min(az,bz,cz),mxz=Math.max(az,bz,cz);
+    const i0=Math.max(0,Math.floor(mnx/CS)),i1=Math.min(N-1,Math.floor(mxx/CS)),j0=Math.max(0,Math.floor(mnz/CS)),j1=Math.min(N-1,Math.floor(mxz/CS));if(i1<i0||j1<j0)return;
+    if(Math.abs(ny/ln)>.45){
+      const d=(bz-cz)*(ax-cx)+(cx-bx)*(az-cz);if(Math.abs(d)<1e-12)return;
+      for(let j=j0;j<=j1;j++)for(let i=i0;i<=i1;i++)for(const[ox,oz]of SMP){const x=(i+ox)*CS,z=(j+oz)*CS,l1=((bz-cz)*(x-cx)+(cx-bx)*(z-cz))/d,l2=((cz-az)*(x-cx)+(ax-cx)*(z-cz))/d,l3=1-l1-l2;
+        if(l1<-1e-6||l2<-1e-6||l3<-1e-6)continue;const c=j*N+i;(FL[c]||(FL[c]=[])).push(l1*ay+l2*by+l3*cy)}
+    }else{
+      const P=[[ax,ay,az],[bx,by,bz],[cx,cy,cz]];
+      for(let j=j0;j<=j1;j++)for(let i=i0;i<=i1;i++){let Q=clip(P,0,i*CS,true);if(!Q.length)continue;Q=clip(Q,0,(i+1)*CS,false);if(!Q.length)continue;Q=clip(Q,2,j*CS,true);if(!Q.length)continue;Q=clip(Q,2,(j+1)*CS,false);if(!Q.length)continue;
+        let a=1e9,b=-1e9;for(const q of Q){if(q[1]<a)a=q[1];if(q[1]>b)b=q[1]}(WL[j*N+i]||(WL[j*N+i]=[])).push(a,b)}
+    }};
+  meshes.forEach((m,mi)=>{const a=cache[mi];for(let i=0;i<a.length;i+=3){a[i]=a[i]*sc+px;a[i+1]*=sc;a[i+2]=a[i+2]*sc+pz}
+    const ix=m.geometry.index,cnt=ix?ix.count:a.length/3;
+    for(let t=0;t+2<cnt;t+=3){const p=(ix?ix.getX(t):t)*3,q=(ix?ix.getX(t+1):t+1)*3,r=(ix?ix.getX(t+2):t+2)*3;tri(a[p],a[p+1],a[p+2],a[q],a[q+1],a[q+2],a[r],a[r+1],a[r+2])}});
+  cache.length=0;
+  // кандидаты пола в каждой клетке
+  const cy=new Array(N*N);
+  for(let c=0;c<N*N;c++){const f=FL[c];if(!f)continue;f.sort((p,q)=>p-q);const o=[];let st=f[0],s=0,n=0;for(const y of f){if(y-st>.8&&n){o.push(s/n);st=y;s=0;n=0}s+=y;n++}o.push(s/n);cy[c]=o}
+  FL.length=0;
+  const valid=(c,y)=>{const w=WL[c];if(w)for(let q=0;q<w.length;q+=2)if(w[q+1]>y+.8&&w[q]<y+1.9)return false;for(const y2 of cy[c])if(y2>y+1.1&&y2<y+1.9)return false;return true};
+  // основной уровень пола = самая частая высота
+  const hist=new Map();for(let c=0;c<N*N;c++){const o=cy[c];if(!o)continue;for(const y of o)if(valid(c,y)){const b=Math.round(y/.3);hist.set(b,(hist.get(b)||0)+1);break}}
+  let mb0=0,mc=0;hist.forEach((v,b)=>{if(v>mc){mc=v;mb0=b}});if(!mc)throw new Error('пол не найден');const mode=mb0*.3;
+  // проходимая область: заливка от основного уровня; перепад между соседними клетками не больше STEP
+  const STEP=1.2,H=new Float32Array(N*N),comp=new Int32Array(N*N).fill(-1),sizes=[],D4=[[1,0],[-1,0],[0,1],[0,-1]];
+  // соседняя клетка: берём самую высокую допустимую поверхность в пределах STEP (так грунт под пандусом/мостом не выбирается)
+  const pick=(c,y)=>{const o=cy[c];if(!o)return NaN;let best=NaN;for(const y2 of o)if(Math.abs(y2-y)<=STEP+1e-6&&valid(c,y2)&&!(y2<=best))best=y2;return best};
+  const seed=c=>{const o=cy[c];if(!o)return NaN;let best=NaN,bd=.6;for(const y2 of o){const d=Math.abs(y2-mode);if(d<=bd&&valid(c,y2)){bd=d;best=y2}}return best};
+  for(let c0=0;c0<N*N;c0++){if(comp[c0]>=0)continue;const y0=seed(c0);if(y0!==y0)continue;
+    const id=sizes.length,q=[c0];comp[c0]=id;H[c0]=y0;
+    for(let h=0;h<q.length;h++){const c=q[h],i=c%N,j=c/N|0;for(const[a,b]of D4){const ni=i+a,nj=j+b;if(ni<1||nj<1||ni>=N-1||nj>=N-1)continue;const nc=nj*N+ni;if(comp[nc]>=0)continue;const y=pick(nc,H[c]);if(y===y){comp[nc]=id;H[nc]=y;q.push(nc)}}}
+    sizes.push(q.length)}
+  if(!sizes.length)throw new Error('проходимая область не найдена');
+  let bid=0;sizes.forEach((n,i)=>{if(n>sizes[bid])bid=i});if(sizes[bid]<150)throw new Error('проходимая область слишком мала: '+sizes[bid]);
+  const free=(i,j)=>i>=0&&j>=0&&i<N&&j<N&&comp[j*N+i]===bid;
+  // записываем в игровые массивы
+  for(let j=0;j<N;j++)for(let i=0;i<N;i++){G[j][i]=free(i,j)?0:1;G0[j][i]=G[j][i]}
+  for(let j=0;j<=N;j++)for(let i=0;i<=N;i++){let s=0,n=0;for(const[a,b]of[[-1,-1],[0,-1],[-1,0],[0,0]])if(free(i+a,j+b)){s+=H[(j+b)*N+i+a];n++}HT[j][i]=(n?s/n:mode)-mode}
+  root.position.y=-mode+man;root.updateMatrixWorld(true);
+  // ---- спавны ----
+  const cells=[];for(let c=0;c<N*N;c++)if(comp[c]===bid)cells.push([c%N,c/N|0]);
+  const wide=(i,j,r)=>{for(let a=-r;a<=r;a++)for(let b=-r;b<=r;b++)if(!free(i+a,j+b))return false;return true};
+  let good=cells.filter(([i,j])=>wide(i,j,2));if(good.length<40)good=cells.filter(([i,j])=>wide(i,j,1));if(good.length<20)good=cells;
+  const bfs=(si,sj)=>{const d=new Int32Array(N*N).fill(-1),q=[sj*N+si];d[q[0]]=0;for(let h=0;h<q.length;h++){const c=q[h],i=c%N,j=c/N|0;for(const[a,b]of D4){if(!free(i+a,j+b))continue;const nc=(j+b)*N+i+a;if(d[nc]<0){d[nc]=d[c]+1;q.push(nc)}}}return{d,q}};
+  const far=(r)=>{let b=good[0],bd=-1;good.forEach(g=>{const v=r.d[g[1]*N+g[0]];if(v>bd){bd=v;b=g}});return b};
+  const mid=cells.reduce((m,c)=>Math.hypot(c[0]-N/2,c[1]-N/2)<Math.hypot(m[0]-N/2,m[1]-N/2)?c:m,cells[0]);
+  const near=(si,sj,cnt)=>{
+    let s=[si,sj];if(!free(si,sj)){let bd=1e9;cells.forEach(c=>{const d=Math.hypot(c[0]-si,c[1]-sj);if(d<bd){bd=d;s=c}})}
+    const r=bfs(s[0],s[1]),out=[];for(const c of r.q){const i=c%N,j=c/N|0;if(!wide(i,j,1))continue;if(out.some(o=>Math.abs(o[0]-i)<2&&Math.abs(o[1]-j)<2))continue;out.push([i,j]);if(out.length>=cnt)break}
+    if(out.length<cnt)for(const c of r.q){const i=c%N,j=c/N|0;if(out.some(o=>Math.abs(o[0]-i)<2&&Math.abs(o[1]-j)<2))continue;out.push([i,j]);if(out.length>=cnt)break}
+    return out};
+  const u=far(bfs(mid[0],mid[1])),v=far(bfs(u[0],u[1]));
+  // дезматч: точки максимально разнесены по карте
+  const dm=[good[Math.random()*good.length|0]],dmin=new Float32Array(good.length).fill(1e9);
+  while(dm.length<24&&dm.length<good.length){const l=dm[dm.length-1];let bi=0,bv=-1;for(let q=0;q<good.length;q++){const d=Math.hypot(good[q][0]-l[0],good[q][1]-l[1]);if(d<dmin[q])dmin[q]=d;if(dmin[q]>bv){bv=dmin[q];bi=q}}dm.push(good[bi])}
+  let cu={t:[],ct:[],dm:[]};try{const s=JSON.parse(localStorage.getItem('st2sp_'+MAPN)||'null');if(s)cu={t:s.t||[],ct:s.ct||[],dm:s.dm||[]};}catch(e){}
+  ['t','ct','dm'].forEach(k=>{cu[k]=cu[k].filter(([i,j])=>free(i,j))});SPAWN.custom=cu;
+  NAV={auto:{t:near(u[0],u[1],10),ct:near(v[0],v[1],10),dm},near,cells};applySpawns();
+  console.log('Dust2: масштаб',sc.toFixed(3),'· пол y =',mode.toFixed(2),'· проходимых клеток',sizes[bid],'из',N*N);
+  return sizes[bid]}
+// горячие клавиши редактора спавнов: F2 — T, F3 — КТ, F4 — дезматч (в текущей точке), F7 — сброс своих, F8 — метки
+addEventListener('keydown',e=>{
+  const k={F2:'t',F3:'ct',F4:'dm'}[e.code];
+  if(k&&NAV){e.preventDefault();if(!(state>0&&state!=3))return;const c=[pl.x/CS|0,pl.z/CS|0];
+    if(!G[c[1]]||G[c[1]][c[0]]!==0){toast('Сюда нельзя ставить спавн');return}
+    SPAWN.custom[k].push(c);saveSpawns();applySpawns();markGrp.visible=true;toast({t:'T',ct:'КТ',dm:'Дезматч'}[k]+': спавн №'+SPAWN.custom[k].length+' добавлен')}
+  else if(e.code=='F7'&&NAV){e.preventDefault();SPAWN.custom={t:[],ct:[],dm:[]};saveSpawns();applySpawns();toast('Свои спавны сброшены')}
+  else if(e.code=='F8'&&NAV){e.preventDefault();markGrp.visible=!markGrp.visible;toast(markGrp.visible?'Метки спавнов: показаны':'Метки спавнов: скрыты')}});
+
 const gltfLoader=new THREE.GLTFLoader();
 gltfLoader.load('dust_2_cs_1.6.glb',gltf=>{
   const root=gltf.scene;
-  root.traverse(o=>{
-    if(o.isMesh){o.castShadow=true;o.receiveShadow=true;if(o.material){o.material.side=THREE.FrontSide;}}
-  });
-  root.scale.setScalar(1.55);
-  root.position.set(66.0,0,84.0);
+  root.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;if(o.material)(Array.isArray(o.material)?o.material:[o.material]).forEach(mt=>{mt.side=THREE.FrontSide})}});
   dustMap.add(root);dustMap.updateMatrixWorld(true);
-  // автовыравнивание по высоте: пол карты должен лежать на y=0 (там ходят игроки и боты)
-  try{
-    root.updateMatrixWorld(true);
-    const rc=new THREE.Raycaster(),dn=new V(0,-1,0),sides=[];
-    root.traverse(o=>{if(o.isMesh&&o.material){const ms=Array.isArray(o.material)?o.material:[o.material];ms.forEach(m=>{sides.push([m,m.side]);m.side=THREE.DoubleSide})}});
-    const hits=[];let tried=0;
-    for(let k=0;k<4000&&hits.length<160;k++){
-      const gx=(Math.random()*(N-2)+1)|0,gz=(Math.random()*(N-2)+1)|0;
-      if(G0[gz][gx]!==0)continue;tried++;
-      rc.set(new V((gx+.5)*CS,200,(gz+.5)*CS),dn);rc.far=400;
-      const r=rc.intersectObject(root,true);
-      if(r.length)hits.push(r[0].point.y);
-    }
-    sides.forEach(([m,sd])=>{m.side=sd});
-    let off=0;
-    if(hits.length>=8){
-      // самая частая высота = основной пол карты
-      const bk=new Map();hits.forEach(y=>{const b=Math.round(y/.3);bk.set(b,(bk.get(b)||0)+1)});
-      let bb=0,bc=0;bk.forEach((c,b)=>{if(c>bc){bc=c;bb=b}});
-      const grp=hits.filter(y=>Math.abs(y/.3-bb)<=1.5);
-      off=grp.reduce((a,b)=>a+b,0)/grp.length;
-      console.log('Dust2: пол найден на y=',off.toFixed(2),'(попаданий',grp.length,'из',hits.length,')');
-    }else console.warn('Dust2: не удалось определить высоту пола, оставляю y=0');
-    const manual=parseFloat(new URLSearchParams(location.search).get('my'))||0;// ?my=-0.5 — ручная подгонка
-    root.position.y=-off+manual;
-    root.updateMatrixWorld(true);
-  }catch(e){console.warn('автовысота карты не сработала',e)}
+  let ok=false;
+  try{setupDust2(root);ok=true}catch(e){console.warn('Dust2: не удалось построить сетку из модели, используется старая сетка',e);root.scale.setScalar(1.55);root.position.set(66,0,84)}
   dustMapReady=true;legacyMap.visible=false;
+  if(ok){drawMB(false);toast('Спавны: F2=T · F3=КТ · F4=дезматч · F8=метки')}
+  if(state>0&&state!=3)newRound();
 },undefined,e=>{legacyMap.visible=true;console.warn('dust_2_cs_1.6.glb не найден — используется встроенная карта',e)});
 // ---- модель бота ----
 function mkBot(tm){const g=new THREE.Group();g.rotation.order='YXZ';
@@ -365,7 +445,7 @@ const WIC={p:'🔫',s:'🔫',r:'🔫',n:'🔭',h:'🔫',k:'🔪',g:'💣'},wlab=
 function kill(k,v,wl,hs,rw){const e=document.createElement('div'),me=k=='Вы'&&v!='Вы',dd=v=='Вы',sp=(c,t)=>{const x=document.createElement('span');x.className=c;x.textContent=t;e.appendChild(x)};e.className=dd?'dd':me?'me':'';if(k!=v)sp('k'+(k=='Вы'?' you':''),k);sp('kw',wl||'');if(hs)sp('hs','🎯');sp('v'+(dd?' you':''),v);if(rw)sp('rw','+$'+rw);const f=$('kf');f.appendChild(e);while(f.children.length>6)f.firstChild.remove();setTimeout(()=>e.remove(),5500)}
 // ---- миникарта ----
 const mmc=$('mm'),mx=mmc.getContext('2d'),mb=document.createElement('canvas');mmc.width=mmc.height=mb.width=mb.height=150;
-{const c=mb.getContext('2d'),s=150/N;for(let y=0;y<N;y++)for(let x=0;x<N;x++){c.fillStyle=['#d9c08a','#26221c','#8a5a2b','#2a3f66','#6b4a22'][G[y][x]];c.fillRect(x*s,y*s,s+.5,s+.5)}c.font='bold 16px sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillStyle='#ffcc33';c.fillText('A',35.1*s,52.2*s);c.fillStyle='#ff7a33';c.fillText('B',11.5*s,15.7*s)}
+function drawMB(legacy){const c=mb.getContext('2d'),s=150/N;c.clearRect(0,0,150,150);for(let y=0;y<N;y++)for(let x=0;x<N;x++){c.fillStyle=['#d9c08a','#26221c','#8a5a2b','#2a3f66','#6b4a22'][G[y][x]];c.fillRect(x*s,y*s,s+.5,s+.5)}if(legacy){c.font='bold 16px sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillStyle='#ffcc33';c.fillText('A',35.1*s,52.2*s);c.fillStyle='#ff7a33';c.fillText('B',11.5*s,15.7*s)}}drawMB(true);
 function mmDraw(){const s=150/N/CS;mx.drawImage(mb,0,0);for(const a of al5)if(!a.dead){mx.fillStyle='#4af';mx.beginPath();mx.arc(a.x*s,a.z*s,3,0,7);mx.fill()}for(const b of bots)if(!b.dead&&b.sees){mx.fillStyle='#f33';mx.beginPath();mx.arc(b.x*s,b.z*s,3,0,7);mx.fill()}
  mx.save();mx.translate(pl.x*s,pl.z*s);mx.rotate(Math.atan2(-Math.cos(yaw),-Math.sin(yaw)));mx.fillStyle='#4f4';mx.beginPath();mx.moveTo(6,0);mx.lineTo(-4,-4);mx.lineTo(-4,4);mx.fill();mx.restore()}
 const xg=$('x').getContext('2d');
@@ -384,9 +464,9 @@ function steer(b){const cx=b.x/CS|0,cz=b.z/CS|0;let best=D[cz][cx],bx=cx,bz=cz;f
 function resetInv(){inv.pri=-1;inv.sec=defSec();W.forEach(w=>{if(w.gr)w.m=0})}
 function newRound(){const bt=TM()=='ct'?'t':'ct';al5.forEach(a=>scene.remove(a.g));al5=[];bots.forEach(b=>scene.remove(b.g));gr.forEach(g=>scene.remove(g.m));gr=[];bots=[];smokes.forEach(k=>k.m.forEach(m=>scene.remove(m)));smokes.length=0;fires.length=0;
  const arK=keep&&!fresh?pl.ar:0;if(!keep||fresh)resetInv();fresh=false;
- const sp0=spawnCell(TM());pl={x:(sp0[0]+.5)*CS,z:(sp0[1]+.5)*CS,y:0,vy:0,hp:100,ar:arK,dead:0};kb=null;
- W.forEach(w=>{if(!w.gr){w.m=w.mag;w.res=w.res0}});cur=inv.pri>=0?inv.pri:inv.sec;rl=0;yaw=TM()=='ct'?Math.atan2(-(64-pl.x),-(64-pl.z)):Math.PI/2;pitch=0;vp=vy=0;camH=1.7;rT=115;buyT=dmode?1e9:20;state=1;kills=0;ads=false;fb=0;$('rm').textContent='';
- (dmode?[]:(bt=='t'?(TCELL.length>5?TCELL:OPEN).slice():SP.slice()).sort(()=>Math.random()-.5).slice(0,m5on()?5:DF.n)).forEach(([x,y],i)=>{const b=mkBot(bt);Object.assign(b,{x:(x+.5)*CS,z:(y+.5)*CS,hp:100,dead:0,hit:0,t:0,al:0,sees:0,react:0,cd:.5,burst:0,sd:0,dir:1,fa:Math.random()*6.28,ft:0,pt:0,wx:null,wz:0,nm:NM[i],wn:(bt=='t'?BWT:BW)[i%BW.length],rush:bt=='t'?4+Math.random()*(12+i*4):0});b.g.position.set(b.x,gh(b.x,b.z),b.z);b.g.rotation.y=b.fa;scene.add(b.g);bots.push(b)});if(m5on()){const cs=(TM()=='ct'?CCELL:TCELL).slice().sort(()=>Math.random()-.5);for(let i=0;i<4;i++){const c=cs[i]||spawnCell(TM());mkAlly(i,(c[0]+.5)*CS,(c[1]+.5)*CS)}}flow()}
+ const pool=spawnList(TM()),sp0=dmode?spawnCell(TM()):(pool.shift()||spawnCell(TM()));pl={x:(sp0[0]+.5)*CS,z:(sp0[1]+.5)*CS,y:0,vy:0,hp:100,ar:arK,dead:0};kb=null;
+ W.forEach(w=>{if(!w.gr){w.m=w.mag;w.res=w.res0}});cur=inv.pri>=0?inv.pri:inv.sec;rl=0;yaw=faceYaw();pitch=0;vp=vy=0;camH=1.7;rT=115;buyT=dmode?1e9:20;state=1;kills=0;ads=false;fb=0;$('rm').textContent='';
+ (dmode?[]:spawnList(bt).slice(0,m5on()?5:DF.n)).forEach(([x,y],i)=>{const b=mkBot(bt);Object.assign(b,{x:(x+.5)*CS,z:(y+.5)*CS,hp:100,dead:0,hit:0,t:0,al:0,sees:0,react:0,cd:.5,burst:0,sd:0,dir:1,fa:Math.random()*6.28,ft:0,pt:0,wx:null,wz:0,nm:NM[i],wn:(bt=='t'?BWT:BW)[i%BW.length],rush:bt=='t'?4+Math.random()*(12+i*4):0});b.g.position.set(b.x,gh(b.x,b.z),b.z);b.g.rotation.y=b.fa;scene.add(b.g);bots.push(b)});if(m5on()){const cs=pool;for(let i=0;i<4;i++){const c=cs[i]||spawnCell(TM());mkAlly(i,(c[0]+.5)*CS,(c[1]+.5)*CS)}}flow()}
 function newGame(){score.t=score.ct=0;roundNo=1;money=800;ls=0;fresh=true;keep=false;paused=false;$('ov').style.display='none';newRound();sfx(600,.1,.2)}
 function matchOver(){state=3;const my=TM()=='t'?score.t:score.ct,op=TM()=='t'?score.ct:score.t,r=my>op?'ПОБЕДА':my<op?'ПОРАЖЕНИЕ':'НИЧЬЯ';$('rm').textContent='';$('ot').innerHTML='Матч окончен: '+r+'<br>T '+score.t+' : '+score.ct+' CT';$('ov').style.display='flex';if(!touch&&document.exitPointerLock)document.exitPointerLock()}
 function go(){newGame()}
@@ -594,7 +674,14 @@ function renderShop(){$('smn').textContent='$'+money+(buyT>0&&buyT<1e8?'  ·  з
 // ---- команды и круговая закупка (как в CS:GO) ----
 const TOnly=new Set(['Glock-18','Tec-9','MAC-10','Galil AR','AK-47','SG 553','G3SG1','Sawed-Off']),COnly=new Set(['USP-S','P2000','Five-SeveN','MP9','FAMAS','M4A4','M4A1-S','AUG','SCAR-20','MAG-7']);
 const TM=()=>cfg.team=='ct'?'ct':'t',canBuy=w=>!!w&&(w.gr||(w.src=='CS'&&!(TM()=='t'?COnly:TOnly).has(w.n))),defSec=()=>{const i=W.findIndex(w=>w.n==(TM()=='t'?'Glock-18':'USP-S'));return i<0?0:i};
-const BWT=['AK-47','Galil AR','AWP','SG 553','MAC-10','Glock-18'],cells=(x0,x1,y0,y1)=>{const a=[];for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++)if(G[y][x]===0)a.push([x,y]);return a},TCELL=cells(58,62,18,25),CCELL=cells(12,19,45,49),OPEN=cells(1,N-2,1,N-2),spawnCell=tm=>{let a=tm=='ct'?CCELL:TCELL;if(!a.length)a=OPEN;return a[Math.random()*a.length|0]};
+const BWT=['AK-47','Galil AR','AWP','SG 553','MAC-10','Glock-18'],cells=(x0,x1,y0,y1)=>{const a=[];for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++)if(G[y][x]===0)a.push([x,y]);return a},TCELL=cells(58,62,18,25),CCELL=cells(12,19,45,49),OPEN=cells(1,N-2,1,N-2),DMSP=[],
+spawnCell=tm=>{
+ if(dmode&&DMSP.length){const pts=Object.values(remotes).filter(r=>!r.dead).map(r=>[r.px,r.pz]);let best=DMSP[0],bs=-1;
+  for(const c of shuf(DMSP).slice(0,8)){const x=(c[0]+.5)*CS,z=(c[1]+.5)*CS,d=pts.length?Math.min(...pts.map(q=>Math.hypot(q[0]-x,q[1]-z))):Math.random()+1;if(d>bs){bs=d;best=c}}return best}
+ let a=tm=='ct'?CCELL:TCELL;if(!a.length)a=OPEN;return a[Math.random()*a.length|0]},
+spawnList=tm=>{const a=tm=='ct'?CCELL:TCELL,p=tm=='ct'?SPAWN.pri.ct:SPAWN.pri.t;let L=!a.length?[]:(p>0&&p<a.length?shuf(a.slice(0,p)).concat(a.slice(p)):shuf(a));
+ while(L.length<5)L.push(OPEN[Math.random()*OPEN.length|0]);return L},
+faceYaw=()=>{const E=TM()=='ct'?TCELL:CCELL;let tx=N*CS/2,tz=N*CS/2;if(!dmode&&E.length){tx=tz=0;E.forEach(c=>{tx+=(c[0]+.5)*CS;tz+=(c[1]+.5)*CS});tx/=E.length;tz/=E.length}return Math.atan2(-(tx-pl.x),-(tz-pl.z))};
 const otTxt=()=>(m5on()?'РЕЖИМ 5×5: с вами 4 бота-союзника. ':'')+(TM()=='t'?'Вы — T против 5 бойцов КТ. Убейте всех КТ до конца раунда (1:55).':'Вы — КТ против бойцов T. Убейте всех T или продержитесь до конца раунда (1:55).');
 const m5on=()=>!dmode&&cfg.m5==1;let al5=[];
 function m5UI(){$('m5b').textContent=cfg.m5==1?'⚔ Режим: 5 на 5 (вы + 4 бота против 5)':'👤 Режим: 1 против ботов';$('ot').textContent=otTxt()}
