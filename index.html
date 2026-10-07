@@ -223,8 +223,35 @@ gltfLoader.load('dust_2_cs_1.6.glb',gltf=>{
     if(o.isMesh){o.castShadow=true;o.receiveShadow=true;if(o.material){o.material.side=THREE.FrontSide;}}
   });
   root.scale.setScalar(1.55);
-  root.position.set(66.0,5.0,84.0);
-  dustMap.add(root);
+  root.position.set(66.0,0,84.0);
+  dustMap.add(root);dustMap.updateMatrixWorld(true);
+  // автовыравнивание по высоте: пол карты должен лежать на y=0 (там ходят игроки и боты)
+  try{
+    root.updateMatrixWorld(true);
+    const rc=new THREE.Raycaster(),dn=new V(0,-1,0),sides=[];
+    root.traverse(o=>{if(o.isMesh&&o.material){const ms=Array.isArray(o.material)?o.material:[o.material];ms.forEach(m=>{sides.push([m,m.side]);m.side=THREE.DoubleSide})}});
+    const hits=[];let tried=0;
+    for(let k=0;k<4000&&hits.length<160;k++){
+      const gx=(Math.random()*(N-2)+1)|0,gz=(Math.random()*(N-2)+1)|0;
+      if(G0[gz][gx]!==0)continue;tried++;
+      rc.set(new V((gx+.5)*CS,200,(gz+.5)*CS),dn);rc.far=400;
+      const r=rc.intersectObject(root,true);
+      if(r.length)hits.push(r[0].point.y);
+    }
+    sides.forEach(([m,sd])=>{m.side=sd});
+    let off=0;
+    if(hits.length>=8){
+      // самая частая высота = основной пол карты
+      const bk=new Map();hits.forEach(y=>{const b=Math.round(y/.3);bk.set(b,(bk.get(b)||0)+1)});
+      let bb=0,bc=0;bk.forEach((c,b)=>{if(c>bc){bc=c;bb=b}});
+      const grp=hits.filter(y=>Math.abs(y/.3-bb)<=1.5);
+      off=grp.reduce((a,b)=>a+b,0)/grp.length;
+      console.log('Dust2: пол найден на y=',off.toFixed(2),'(попаданий',grp.length,'из',hits.length,')');
+    }else console.warn('Dust2: не удалось определить высоту пола, оставляю y=0');
+    const manual=parseFloat(new URLSearchParams(location.search).get('my'))||0;// ?my=-0.5 — ручная подгонка
+    root.position.y=-off+manual;
+    root.updateMatrixWorld(true);
+  }catch(e){console.warn('автовысота карты не сработала',e)}
   dustMapReady=true;legacyMap.visible=false;
 },undefined,e=>{legacyMap.visible=true;console.warn('dust_2_cs_1.6.glb не найден — используется встроенная карта',e)});
 // ---- модель бота ----
